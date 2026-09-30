@@ -4,7 +4,7 @@ A production-grade email scheduling service with a dashboard, supporting delayed
 
 ## Demo Video
 
-Demo video (5 minutes): https://youtu.be/2ZDRbzHzl0M
+Demo video (5 minutes): https://drive.google.com/drive/folders/1agI44Vyc3RX-gGVNDZbWoZXhfXOAKX1e?usp=drive_link
 
 The video demonstrates scheduling emails, viewing scheduled and sent emails, restart persistence, and rate limiting behavior.
 
