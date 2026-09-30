@@ -1,0 +1,118 @@
+// prisma/schema.prisma
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum CampaignStatus {
+  DRAFT
+  SCHEDULED
+  RUNNING
+  COMPLETED
+  FAILED
+  PAUSED
+}
+
+enum JobStatus {
+  SCHEDULED
+  SENDING
+  SENT
+  FAILED
+  RESCHEDULED
+  CANCELED
+}
+
+model User {
+  id        String   @id @default(uuid())
+  googleId  String   @unique
+  email     String   @unique
+  name      String
+  avatarUrl String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  senders   Sender[]
+  campaigns EmailCampaign[]
+
+  @@index([googleId])
+  @@index([email])
+}
+
+model Sender {
+  id          String   @id @default(uuid())
+  userId      String
+  email       String
+  displayName String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user       User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  campaigns  EmailCampaign[]
+  rateLimits RateLimitWindow[]
+
+  @@index([userId])
+  @@index([email])
+}
+
+model EmailCampaign {
+  id                 String          @id @default(uuid())
+  userId             String
+  senderId           String
+  subject            String
+  body               String          @db.Text
+  scheduledStartAt   DateTime
+  delayBetweenEmails Int
+  hourlyLimit        Int
+  status             CampaignStatus  @default(DRAFT)
+  createdAt          DateTime        @default(now())
+  updatedAt          DateTime        @updatedAt
+
+  user     User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sender   Sender        @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  jobs     EmailJob[]
+
+  @@index([userId])
+  @@index([senderId])
+  @@index([status])
+  @@index([scheduledStartAt])
+}
+
+model EmailJob {
+  id             String   @id @default(uuid())
+  campaignId     String
+  recipientEmail String
+  scheduledAt    DateTime
+  status         JobStatus @default(SCHEDULED)
+  attempts       Int      @default(0)
+  lastError      String?  @db.Text
+  sentAt         DateTime?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  campaign EmailCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+
+  @@index([campaignId])
+  @@index([status])
+  @@index([scheduledAt])
+  @@index([recipientEmail])
+}
+
+model RateLimitWindow {
+  id          String   @id @default(uuid())
+  senderId    String
+  windowStart DateTime
+  sentCount   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  sender Sender @relation(fields: [senderId], references: [id], onDelete: Cascade)
+
+  @@unique([senderId, windowStart])
+  @@index([senderId])
+  @@index([windowStart])
+}

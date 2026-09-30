@@ -1,0 +1,80 @@
+# ============================================
+# CRITICAL - Prevents 100MB+ files
+# ============================================
+node_modules/
+**/node_modules/
+*/node_modules/
+
+.next/
+**/.next/
+*/.next/
+
+dist/
+build/
+out/
+
+# ============================================
+# Environment Files
+# ============================================
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env.*.local
+
+# Keep this one for documentation
+!.env.example
+
+# ============================================
+# Logs
+# ============================================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ============================================
+# Database (Don't ignore migrations!)
+# ============================================
+*.sqlite
+*.db
+prisma/dev.db
+# DO NOT IGNORE: prisma/migrations/ (you need these!)
+
+# ============================================
+# Redis
+# ============================================
+dump.rdb
+
+# ============================================
+# Testing
+# ============================================
+coverage/
+.nyc_output/
+
+# ============================================
+# OS Files
+# ============================================
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ============================================
+# IDE
+# ============================================
+.vscode/
+.idea/
+*.swp
+
+# ============================================
+# Build Info
+# ============================================
+*.tsbuildinfo
+next-env.d.ts
+
+# ============================================
+# Turbopack Cache (Next.js dev cache)
+# ============================================
+.turbo/
