@@ -1,0 +1,18 @@
+{
+  "name": "reachinbox-scheduler",
+  "version": "2.0.0",
+  "private": true,
+  "workspaces": ["server", "client"],
+  "scripts": {
+    "dev": "concurrently -k -n api,worker,web -c cyan,magenta,green \"npm:dev:api\" \"npm:dev:worker\" \"npm:dev:web\"",
+    "dev:api": "npm --workspace server run dev:api",
+    "dev:worker": "npm --workspace server run dev:worker",
+    "dev:web": "npm --workspace client run dev",
+    "build": "npm --workspace client run build && npm --workspace server run build",
+    "start": "npm --workspace server run start",
+    "worker": "npm --workspace server run worker",
+    "ethereal": "npm --workspace server run ethereal"
+  },
+  "devDependencies": { "concurrently": "^9.2.0" },
+  "engines": { "node": ">=20" }
+}
